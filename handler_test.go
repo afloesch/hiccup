@@ -16,15 +16,15 @@ import (
 func Example_handler() {
 	// create request body decoders
 	decoders := hiccup.Decoder(
-		hiccup.RequestUnmarshaler("application/json", json.Unmarshal), // the first entry is the default
-		hiccup.RequestUnmarshaler("application/yaml", yaml.Unmarshal),
+		hiccup.WithDecoder("application/json", json.Unmarshal), // the first entry is the default
+		hiccup.WithDecoder("application/yaml", yaml.Unmarshal),
 	)
 
 	// define the supported response body formats.
-	encoders := []hiccup.ResponseEncoder{
-		hiccup.ResponseMarshaler("application/json", json.Marshal), // the first entry is the default
-		hiccup.ResponseMarshaler("application/yaml", yaml.Marshal),
-	}
+	encoders := hiccup.Encoder(
+		hiccup.WithEncoder("application/json", json.Marshal), // the first entry is the default
+		hiccup.WithEncoder("application/yaml", yaml.Marshal),
+	)
 
 	// create a handler that conforms to the hiccup.HandlerFunc interface.
 	myHandler := func(r *http.Request) *hiccup.Response {
@@ -74,11 +74,11 @@ func ExampleHandler_differentContentTypes() {
 
 	// define the supported response formats.
 	// this example demonstrates json, yaml, and plain text.
-	en := []hiccup.ResponseEncoder{
-		hiccup.ResponseMarshaler("application/json", json.Marshal), // the first entry is the default
-		hiccup.ResponseMarshaler("application/yaml", yaml.Marshal),
-		hiccup.ResponseMarshaler("text/plain", hiccup.MarshalText),
-	}
+	en := hiccup.Encoder(
+		hiccup.WithEncoder("application/json", json.Marshal), // the first entry is the default
+		hiccup.WithEncoder("application/yaml", yaml.Marshal),
+		hiccup.WithEncoder("text/plain", hiccup.MarshalText),
+	)
 
 	// make a simple test request asking for a yaml response.
 	req := httptest.NewRequest("GET", "/", nil)
@@ -114,10 +114,10 @@ func TestHandler(t *testing.T) {
 	// define the supported response formats.
 	// this example demonstrates json, yaml, and plain text.
 	en := []hiccup.ResponseEncoder{
-		hiccup.ResponseMarshaler("application/json", json.Marshal),
-		hiccup.ResponseMarshaler("application/yaml", yaml.Marshal),
-		hiccup.ResponseMarshaler("text/plain", hiccup.MarshalText),
-		hiccup.ResponseMarshaler("test/failed", testFailMarshal),
+		hiccup.WithEncoder("application/json", json.Marshal),
+		hiccup.WithEncoder("application/yaml", yaml.Marshal),
+		hiccup.WithEncoder("text/plain", hiccup.MarshalText),
+		hiccup.WithEncoder("test/failed", testFailMarshal),
 	}
 
 	handler := hiccup.Handler(myHandler, en...)

@@ -12,9 +12,9 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-func ExampleRequestUnmarshaler() {
+func ExampleWithDecoder() {
 	// example unmarshaler
-	ex := hiccup.RequestUnmarshaler("application/json", json.Unmarshal)
+	ex := hiccup.WithDecoder("application/json", json.Unmarshal)
 
 	// test json object
 	msg := []byte(`{
@@ -31,8 +31,8 @@ func ExampleRequestUnmarshaler() {
 func ExampleRequestDecoder_DecodeBody() {
 	// create request body decoders
 	dec := hiccup.Decoder(
-		hiccup.RequestUnmarshaler("application/json", json.Unmarshal), // the first entry is the default
-		hiccup.RequestUnmarshaler("application/yaml", yaml.Unmarshal),
+		hiccup.WithDecoder("application/json", json.Unmarshal), // the first entry is the default
+		hiccup.WithDecoder("application/yaml", yaml.Unmarshal),
 	)
 
 	// create test request of yaml data
@@ -55,8 +55,8 @@ func (t *testReader) Read(p []byte) (n int, err error) {
 
 func TestRequestDecoder(t *testing.T) {
 	dec := hiccup.Decoder(
-		hiccup.RequestUnmarshaler("application/json", json.Unmarshal),
-		hiccup.RequestUnmarshaler("application/yaml", yaml.Unmarshal),
+		hiccup.WithDecoder("application/json", json.Unmarshal),
+		hiccup.WithDecoder("application/yaml", yaml.Unmarshal),
 	)
 
 	_, req := testRequest("GET", "/", nil)

@@ -12,7 +12,7 @@ type Marshaler func(v any) ([]byte, error)
 /*
 Helper struct to quickly define a ResponseEncoder.
 
-See the [ResponseMarshaler] function.
+See the [WithEncoder] function.
 */
 type responseMarshaler struct {
 	contentType string
@@ -20,12 +20,22 @@ type responseMarshaler struct {
 }
 
 /*
-ResponseMarshaler is a helper function to return an object that conforms
+Encoder is a helper that returns a slice of ResponseEncoders for
+inclusion in a [hiccup.Handler].
+*/
+func Encoder(e ...ResponseEncoder) []ResponseEncoder {
+	enc := make([]ResponseEncoder, 0)
+	enc = append(enc, e...)
+	return enc
+}
+
+/*
+WithEncoder is a helper function to return an object that conforms
 to the [ResponseEncoder] interface, and can be passed into the [hiccup.HTTPHandler]
 function to support multiple content encodings based on the "Accept" header
 sent in a http request.
 */
-func ResponseMarshaler(contentType string, m Marshaler) *responseMarshaler {
+func WithEncoder(contentType string, m Marshaler) *responseMarshaler {
 	return &responseMarshaler{
 		contentType: contentType,
 		marshaler:   m,

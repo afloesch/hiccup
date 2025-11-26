@@ -51,10 +51,10 @@ func (r *requestUnmarshaler) Unmarshal(data []byte, v any) error {
 }
 
 /*
-RequestUnmarshaler is a helper function that returns an object which conforms
+WithDecoder is a helper function that returns an object which conforms
 to the [BodyDecoder] interface.
 */
-func RequestUnmarshaler(contentType string, u Unmarshaler) *requestUnmarshaler {
+func WithDecoder(contentType string, u Unmarshaler) *requestUnmarshaler {
 	return &requestUnmarshaler{
 		contentType: contentType,
 		unmarshaler: u,

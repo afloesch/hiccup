@@ -7,8 +7,8 @@ import (
 	"github.com/afloesch/hiccup"
 )
 
-func ExampleResponseMarshaler() {
-	m := hiccup.ResponseMarshaler("application/json", json.Marshal)
+func ExampleWithEncoder() {
+	m := hiccup.WithEncoder("application/json", json.Marshal)
 
 	b, _ := m.Marshal(map[string]string{
 		"Message": "Hello World!",
