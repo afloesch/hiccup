@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/WP-beta/be-core/src/api/hiccup"
+	"github.com/afloesch/hiccup"
 )
 
 func ExampleResponseMarshaler() {

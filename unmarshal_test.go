@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/WP-beta/be-core/src/api/hiccup"
+	"github.com/afloesch/hiccup"
 	"go.yaml.in/yaml/v3"
 )
 

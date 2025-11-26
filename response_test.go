@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/WP-beta/be-core/src/api/hiccup"
+	"github.com/afloesch/hiccup"
 )
 
 func ExampleRespond() {
