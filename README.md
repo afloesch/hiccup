@@ -1,4 +1,5 @@
 # Hiccup
+![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)
 
 Hiccup is a go package to simplify handling http requests and responses with multiple content types in a RESTful API, and eliminate some of the boilerplate code in writing responses and decoding request body content. The main handler method in hiccup returns a standard go library [http.Handler](https://pkg.go.dev/net/http#Handler), so it can easily integrate with any go router or framework of your choosing.
 
