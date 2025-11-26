@@ -1,3 +1,11 @@
-- name: Go Coverage Badge
+name: Go Coverage Badge
 
-  uses: tj-actions/coverage-badge-go@v3
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  - name: Go Coverage Badge
+    uses: tj-actions/coverage-badge-go@v3
