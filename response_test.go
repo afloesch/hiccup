@@ -11,10 +11,18 @@ func ExampleRespond() {
 	hiccup.Handler(func(r *http.Request) *hiccup.Response {
 		// return a Response object and hiccup will
 		// handle writing the response.
-		res := hiccup.Respond(200).
+		return hiccup.Respond(200).
 			SetBody("Great Success!").
 			SetHeader("Cookie", "key=value;")
-		return res
+	})
+}
+
+func ExampleRespond_setRedirectURI() {
+	hiccup.Handler(func(r *http.Request) *hiccup.Response {
+		// return a Response object with a valid 3XX status code
+		// and set the redirect URI.
+		return hiccup.Respond(http.StatusTemporaryRedirect).
+			SetRedirectURI("http://www.acme.com")
 	})
 }
 

@@ -68,11 +68,19 @@ found then plain text is sent.
 If a configured encoder in the [ResponseHandler] cannot successfully
 marshal response body content the error encountered will be sent
 as plain text with a 500 status code.
+
+All 3XX responses will send a client redirect request back with the configured
+[Response.RedirectURI], without modifying the response body content encoded
+by [http.Redirect], and without modifying the "Content-Type" header.
 */
 func (h *ResponseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	res := h.handler(r)
-	accept, _, _ := mime.ParseMediaType(r.Header.Get("Accept"))
+	if res.StatusCode >= 300 && res.StatusCode < 400 {
+		http.Redirect(w, r, res.RedirectURI, res.StatusCode)
+		return
+	}
 
+	accept, _, _ := mime.ParseMediaType(r.Header.Get("Accept"))
 	if encFunc := h.encoder[accept]; encFunc != nil {
 		writeEncodedBody(w, res, encFunc)
 	} else if encFunc := h.defaultEncoder; encFunc != nil {

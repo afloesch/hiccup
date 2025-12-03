@@ -21,6 +21,8 @@ type Response struct {
 	Body any
 	// Response headers to set.
 	Headers map[string]string
+	// RedirectURI for 3XX status code responses.
+	RedirectURI string
 	// HTTP status code to send.
 	StatusCode int
 }
@@ -61,5 +63,13 @@ func (r *Response) SetHeaders(headers map[string]string) *Response {
 		r.Headers = make(map[string]string)
 	}
 	r.Headers = headers
+	return r
+}
+
+/*
+Set a URI to redirect a client to.
+*/
+func (r *Response) SetRedirectURI(value string) *Response {
+	r.RedirectURI = value
 	return r
 }

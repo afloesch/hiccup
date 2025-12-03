@@ -104,6 +104,23 @@ func testFailMarshal(v any) ([]byte, error) {
 	return nil, errors.New("marshal failed")
 }
 
+func TestHandler_Redirect(t *testing.T) {
+	myHandler := func(r *http.Request) *hiccup.Response {
+		return hiccup.
+			Respond(http.StatusMovedPermanently).
+			SetRedirectURI("http://www.acme.com/home")
+	}
+
+	handler := hiccup.Handler(myHandler, hiccup.WithEncoder("text/plain", hiccup.MarshalText))
+	w, req := testRequest("GET", "/", nil)
+	handler.ServeHTTP(w, req)
+
+	loc := w.Result().Header.Get("Location")
+	if loc != "http://www.acme.com/home" {
+		t.Error("invalid redirect location", loc)
+	}
+}
+
 func TestHandler(t *testing.T) {
 	myHandler := func(r *http.Request) *hiccup.Response {
 		return hiccup.Respond(http.StatusOK).SetBody(map[string]string{
