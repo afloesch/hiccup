@@ -45,6 +45,35 @@ func Example_handler() {
 	hiccup.Handler(myHandler, encoders...)
 }
 
+/*
+func Example_customDecoder() {
+	type formDecoder struct {
+		Decoder     *form.Decoder
+	}
+
+	func (f *formDecoder) ContentType() string {
+		return "application/x-www-form-urlencoded"
+	}
+
+	func (f *form.Decoder) Unmarshal(data []byte, v any) error {
+		params, err := url.ParseQuery(string(data))
+		if err != nil {
+			return err
+		}
+
+		return FD.Decoder.Decode(v, params)
+	}
+
+	dec := &formDecoder{
+		Decoder: form.NewDecoder(),
+	}
+
+	myHandler := hiccup.Handler(func(r *http.Request) *hiccup.Response {
+		return nil
+	}, dec)
+}
+*/
+
 func ExampleHandler_basic() {
 	// create a handler that conforms to the hiccup.HandlerFunc interface.
 	myHandler := func(r *http.Request) *hiccup.Response {
@@ -123,9 +152,18 @@ func TestHandler_Redirect(t *testing.T) {
 
 func TestHandler(t *testing.T) {
 	myHandler := func(r *http.Request) *hiccup.Response {
-		return hiccup.Respond(http.StatusOK).SetBody(map[string]string{
-			"Message": "Hello World!",
-		}).SetHeader("Cookie", "key=value;").SetHeader("x-test", "value")
+		return hiccup.
+			Respond(http.StatusOK).
+			SetHeader("Cookie", "key=value;").
+			SetHeader("x-test", "value").
+			SetCookies([]http.Cookie{{
+				Name:  "test_cookie",
+				Value: "cookie_value",
+				Path:  "/",
+			}}).
+			SetBody(map[string]string{
+				"Message": "Hello World!",
+			})
 	}
 
 	// define the supported response formats.
@@ -201,6 +239,10 @@ func TestHandler(t *testing.T) {
 	}
 	if string(body) != `map[Message:Hello World!]` {
 		t.Error("incorrect body value")
+		t.FailNow()
+	}
+	if w.Header().Get("Set-Cookie") != "test_cookie=cookie_value; Path=/" {
+		t.Error("cookie value not set")
 		t.FailNow()
 	}
 }

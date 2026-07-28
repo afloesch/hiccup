@@ -1,5 +1,7 @@
 package hiccup
 
+import "net/http"
+
 /*
 ResponseEncoder defines an interface to describe different marshalers
 for different content types.
@@ -19,6 +21,8 @@ Response object returned by a [Handler] function.
 type Response struct {
 	// Response body content.
 	Body any
+	// Cookie values to set in the response headers.
+	Cookie []http.Cookie
 	// Response headers to set.
 	Headers map[string]string
 	// RedirectURI for 3XX status code responses.
@@ -41,6 +45,14 @@ Set the response body to the passed value.
 */
 func (r *Response) SetBody(value any) *Response {
 	r.Body = value
+	return r
+}
+
+/*
+Set http.Cookie values to be sent in the response headers.
+*/
+func (r *Response) SetCookies(value []http.Cookie) *Response {
+	r.Cookie = value
 	return r
 }
 

@@ -75,6 +75,13 @@ by [http.Redirect], and without modifying the "Content-Type" header.
 */
 func (h *ResponseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	res := h.handler(r)
+	for k, v := range res.Headers {
+		w.Header().Set(k, v)
+	}
+	for _, v := range res.Cookie {
+		http.SetCookie(w, &v)
+	}
+
 	if res.StatusCode >= 300 && res.StatusCode < 400 {
 		http.Redirect(w, r, res.RedirectURI, res.StatusCode)
 		return
@@ -100,25 +107,29 @@ func writeEncodedBody(w http.ResponseWriter, r *Response, enc ResponseEncoder) {
 		return
 	}
 
-	for k, v := range r.Headers {
+	/*for k, v := range r.Headers {
 		w.Header().Set(k, v)
-	}
+	}*/
 	w.Header().Set("Content-Type", enc.ContentType())
 	w.WriteHeader(r.StatusCode)
 
 	if len(b) > 0 {
 		w.Write(b)
+	} else {
+		w.Write([]byte(""))
 	}
 }
 
 func writeTextBody(w http.ResponseWriter, r *Response) {
-	for k, v := range r.Headers {
+	/*for k, v := range r.Headers {
 		w.Header().Set(k, v)
-	}
+	}*/
 	w.Header().Set("Content-Type", contentTypeText)
 	w.WriteHeader(r.StatusCode)
 
 	if r.Body != nil {
 		w.Write([]byte(fmt.Sprint(r.Body)))
+	} else {
+		w.Write([]byte(""))
 	}
 }
