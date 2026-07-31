@@ -112,8 +112,6 @@ func writeEncodedBody(w http.ResponseWriter, r *Response, enc ResponseEncoder) {
 
 	if len(b) > 0 {
 		w.Write(b)
-	} else {
-		w.Write([]byte(""))
 	}
 }
 
@@ -121,9 +119,9 @@ func writeTextBody(w http.ResponseWriter, r *Response) {
 	w.Header().Set("Content-Type", contentTypeText)
 	w.WriteHeader(r.StatusCode)
 
-	if r.Body != nil {
-		w.Write([]byte(fmt.Sprint(r.Body)))
-	} else {
-		w.Write([]byte(""))
+	b := make([]byte, 0)
+	b = fmt.Appendf(b, fmt.Sprint(r.Body))
+	if len(b) > 0 {
+		w.Write(b)
 	}
 }
