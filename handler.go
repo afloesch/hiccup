@@ -107,9 +107,6 @@ func writeEncodedBody(w http.ResponseWriter, r *Response, enc ResponseEncoder) {
 		return
 	}
 
-	/*for k, v := range r.Headers {
-		w.Header().Set(k, v)
-	}*/
 	w.Header().Set("Content-Type", enc.ContentType())
 	w.WriteHeader(r.StatusCode)
 
@@ -121,9 +118,6 @@ func writeEncodedBody(w http.ResponseWriter, r *Response, enc ResponseEncoder) {
 }
 
 func writeTextBody(w http.ResponseWriter, r *Response) {
-	/*for k, v := range r.Headers {
-		w.Header().Set(k, v)
-	}*/
 	w.Header().Set("Content-Type", contentTypeText)
 	w.WriteHeader(r.StatusCode)
 
