@@ -98,13 +98,19 @@ func (h *ResponseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func writeEncodedBody(w http.ResponseWriter, r *Response, enc ResponseEncoder) {
-	b, err := enc.Marshal(r.Body)
-	if err != nil {
-		writeTextBody(w, &Response{
-			StatusCode: http.StatusInternalServerError,
-			Body:       err.Error(),
-		})
-		return
+	b := make([]byte, 0)
+	b = fmt.Appendf(b, fmt.Sprint(r.Body))
+
+	if len(b) > 0 {
+		var err error
+		b, err = enc.Marshal(r.Body)
+		if err != nil {
+			writeTextBody(w, &Response{
+				StatusCode: http.StatusInternalServerError,
+				Body:       err.Error(),
+			})
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", enc.ContentType())
