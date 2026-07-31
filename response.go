@@ -50,6 +50,8 @@ func (r *Response) SetBody(value any) *Response {
 
 /*
 Set http.Cookie values to be sent in the response headers.
+Cookie values will overwrite any conflicting Set-Cookie values
+declared in the Response headers.
 */
 func (r *Response) SetCookies(value []http.Cookie) *Response {
 	r.Cookie = value
@@ -83,5 +85,13 @@ Set a URI to redirect a client to.
 */
 func (r *Response) SetRedirectURI(value string) *Response {
 	r.RedirectURI = value
+	return r
+}
+
+/*
+Set or change the status code for a Response.
+*/
+func (r *Response) SetStatusCode(value int) *Response {
+	r.StatusCode = value
 	return r
 }
